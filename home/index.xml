@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Homes on Philip Stephenson</title>
+    <link>http://philipiv.me/home/</link>
+    <description>Recent content in Homes on Philip Stephenson</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2016 Philip Stephenson</copyright>
+    <lastBuildDate>Wed, 20 Apr 2016 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://philipiv.me/home/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>about</title>
+      <link>http://philipiv.me/home/about/</link>
+      <pubDate>Wed, 20 Apr 2016 00:00:00 +0000</pubDate>
+      
+      <guid>http://philipiv.me/home/about/</guid>
+      <description>
+
+&lt;h1 id=&#34;about-me&#34;&gt;About Me&lt;/h1&gt;
+
+&lt;p&gt;I&amp;rsquo;m a student at Drexel pursuing a Bachelor&amp;rsquo;s of Science in Computer Science. I&amp;rsquo;ve been programming since middle school, and now want to formalize that knowledge and turn it in to a career. You can read more about me and some of the project&amp;rsquo;s I&amp;rsquo;m working on below, as well as by clicking my github and LinkedIn links above.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

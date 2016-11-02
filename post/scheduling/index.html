@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="theme" content="hugo-academic">
+    <meta name="generator" content="Hugo 0.16" />
+    <meta name="author" content="Philip Stephenson">
+    <meta name="description" content="Computer Science Major">
+
+    <link rel="stylesheet" href="http://philipiv.mecss/highlight.min.css">
+    <link rel="stylesheet" href="http://philipiv.mecss/bootstrap.min.css">
+    <link rel="stylesheet" href="http://philipiv.mecss/font-awesome.min.css">
+    <link rel="stylesheet" href="http://philipiv.mecss/academicons.min.css">
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:400,700|Merriweather|Roboto+Mono">
+    <link rel="stylesheet" href="http://philipiv.mecss/hugo-academic.css">
+    
+
+
+    <link rel="shortcut icon" href="http://philipiv.meimg/favicon.ico" type="image/x-icon">
+    <link rel="canonical" href="http://philipiv.me/post/scheduling/">
+
+    <title>Automating my Drexel Registration | Philip Stephenson</title>
+
+</head>
+<body id="top">
+
+
+<nav class="navbar navbar-default navbar-fixed-top" id="navbar-main">
+    <div class="container">
+
+        
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="http://philipiv.me">Philip Stephenson</a>
+        </div>
+
+        
+        <div class="collapse navbar-collapse" id="#navbar-collapse-1">
+
+            
+            <ul class="nav navbar-nav navbar-right">
+                
+                <li class="nav-item"><a href="http://philipiv.me#top">Home</a></li>
+                
+                <li class="nav-item"><a href="http://philipiv.me#projects">Projects</a></li>
+                
+                <li class="nav-item"><a href="http://philipiv.me#posts">Posts</a></li>
+                
+                <li class="nav-item"><a href="http://philipiv.me#contact">Contact</a></li>
+                
+            </ul>
+
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+
+    <article class="article" itemscope itemtype="http://schema.org/Article">
+
+        
+
+        <h1 itemprop="name">Automating my Drexel Registration</h1>
+
+        
+
+<div class="article-metadata">
+
+    <span class="article-date">
+        <time datetime="2016-10-31 23:42:58 -0400 EDT" itemprop="datePublished">Mon, Oct 31, 2016</time>
+    </span>
+
+    
+    
+    
+    
+
+    
+        
+<div class="share-box">
+    <ul class="share">
+        <li>
+            <a class="facebook" href="https://www.facebook.com/sharer.php?u=http%3a%2f%2fphilipiv.me%2fpost%2fscheduling%2f" target="_blank">
+                <i class="fa fa-facebook"></i>
+            </a>
+        </li>
+        <li>
+            <a class="twitter" href="https://twitter.com/intent/tweet?text=Automating%20my%20Drexel%20Registration&amp;url=http%3a%2f%2fphilipiv.me%2fpost%2fscheduling%2f" target="_blank">
+                <i class="fa fa-twitter"></i>
+            </a>
+        </li>
+        <li>
+            <a class="linkedin" href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http%3a%2f%2fphilipiv.me%2fpost%2fscheduling%2f&amp;title=Automating%20my%20Drexel%20Registration" target="_blank">
+                <i class="fa fa-linkedin"></i>
+            </a>
+        </li>
+        <li>
+            <a class="weibo" href="http://service.weibo.com/share/share.php?url=http%3a%2f%2fphilipiv.me%2fpost%2fscheduling%2f&amp;title=Automating%20my%20Drexel%20Registration" target="_blank">
+                <i class="fa fa-weibo"></i>
+            </a>
+        </li>
+        <li>
+            <a class="email" href="mailto:?subject=Automating%20my%20Drexel%20Registration&amp;body=http%3a%2f%2fphilipiv.me%2fpost%2fscheduling%2f">
+                <i class="fa fa-envelope"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+    
+
+</div>
+
+
+        <div class="article-style" itemprop="articleBody">
+            
+
+<h2 id="introduction">Introduction</h2>
+
+<p>To register for my classes for the upcoming winter quarter, I would need to get up before 7:30 in the morning to log in to DrexelOne, the school&rsquo;s web portal, and add all my CRNs. I wasn&rsquo;t the only one with this time ticket, either, which means I&rsquo;d have to be fast, or else someone else could potentially take the last slot in a class I wanted to take. Fortunately, I&rsquo;m not the only one with this problem: a fellow Drexel student by the name of <a href="https://github.com/jackyliang">Jacky Liang</a> posted his <a href="https://github.com/jackyliang/Drexel-Shaft-Protection">python-based auto-scheduler</a> to the Drexel subreddit.</p>
+
+<h2 id="setting-it-up">Setting It Up</h2>
+
+<p>The way the program works, you supply a .json file with your login info and a list of CRNs, it creates a browser, logs it in to DrexelOne, navigates to the add/drop classes page, and attempts to add all of your CRNs. It does this all as soon as you run the program, meaning that to use this to register for my classes, I&rsquo;d still have to wake up at 7:30 and get on my computer, which is exactly what I&rsquo;m hoping to avoid.</p>
+
+<p>All that can be fixed, however, with a small server courtesy of AWS free tier and a few Linux utilities.</p>
+
+<p>The first step was to launch a new AWS instance - I just used the free tier Ubuntu server. You can only have one of these without paying, so I just deleted the old one I&rsquo;d been using as a gaming server for my friends and I. The provisioning was nothing complicated - just a normal t2.micro instance with SSH traffic allowed so I could connect and set up everything I needed.</p>
+
+<p><img src="/img/post/scheduling/aws.png"/></p>
+
+<p>The next step was to get the project running. Downloading it was accomplished by a simple <code>git clone</code>, but the project was built on python 2.7, while Ubuntu only has a repository for python 3. In order to get the python version I needed, I used a useful ppa humorously called <a href="https://launchpad.net/~fkrull/+archive/ubuntu/deadsnakes">deadsnakes</a>, which contains every python release from 2.3.</p>
+
+<pre><code>sudo add-apt-repository ppa:fkrull/deadsnakes
+sudo apt-get update
+sudo apt-get install python2.7
+</code></pre>
+
+<p>Then, mechanize and lxml, two python libraries the project depended on, had to be installed, which in turn requires pip, a python library manager.</p>
+
+<pre><code>sudo apt-get install python-pip
+pip install mechanize
+pip install lxml
+</code></pre>
+
+<p>Now all my dependencies were taken care off, and I could actually test the program, at least some. I put my info and CRNs in to the JSON file, and ran the script, and got the following error output:</p>
+
+<pre><code>Reading info.json
+(OK)
+Logging in for: pbs44
+(OK)
+ERROR: It seems like it is not your registration time yet. If it is, then try again in a few seconds.
+</code></pre>
+
+<p>Which is about what I expected, since Sunday night when I was setting this up was decidedly before my registration time. Ultimately, I was just going to hope the good reviews I&rsquo;d seen left for it were true and it would work for me when the time came.</p>
+
+<h2 id="automating">Automating</h2>
+
+<p>The most important part of the plan, of course, was to have this script run for me early the next morning, so I wouldn&rsquo;t have to get up and do it myself. The key utility for this part was the built in utility <code>at</code>, which allows for delayed command execution, similar to a once-off <code>cron</code> job. <code>at</code> is a very simple utility, which takes input and executes them as commands in a shell - the bourne shell by default.</p>
+
+<p>I created a simple two-line script to use,</p>
+
+<pre><code>cd ~/Drexel-Shaft-Protection
+python2.7 add.py
+</code></pre>
+
+<p>and saved it in my home directory as <code>addClasses</code>. I ran a quick test, just to make sure the script worked <code>at now -m -f addClasses</code> (the <code>-m</code> flag specifies to send mail with output on completion, and <code>-f</code> takes commands from file instead of standard input), and got an email with the same error output from earlier, which meant my script worked! Then, I just had to set up another queued job for the morning (times in GMT, the server default):</p>
+
+<pre><code>at 11:29 -m -f addClasses
+at 11:30 -m -f addClasses
+at 11:31 -m -f addClasses
+</code></pre>
+
+<p>I used more than one scheduled job in case of potential time disparities or server problems on Drexel&rsquo;s job, though in the end my 7:30 job did it perfectly. At this point, I&rsquo;d achieved what I wanted, but I wasn&rsquo;t fully confident in whether the script or my automation would work, so I wanted to set up a way to make sure the script had executed as planned. I could&rsquo;ve just SSH&rsquo;d into my server to check, but that seemed inelegant. Instead, I decided to forward the mail from <code>at</code> to my gmail.</p>
+
+<h2 id="email">Email</h2>
+
+<p>Having installed the default mail package to be able to check my mail from testing, I already had a running postfix service, the default Ubuntu mail client. Fortunately, postfix is set up to make this process quite simple. Since it respects the aliases file, all I had to do was <code>vim /etc/aliases</code>, and add the alias <code>ubuntu: philipstephenson4@gmail.com</code>. I ran <code>newaliases</code> to make sure postfix picked up on the new alias, then restarted the service. I sent a quick test mail to myself, and checked my gmail:
+<img src="/img/post/scheduling/email1.png" style="height:350px;"/>
+Success! This meant the emails <code>at</code> would send when it completed its jobs should be sent to my gmail as well.</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>I set an alarm for 7:30, so I could make sure my classes were scheduled and do it myself if not. I checked my email when I got up, and had 3 emails waiting in my inbox.
+<table><tr>
+<td ><img src="/img/post/scheduling/email2.png" /></td>
+<td><img src="/img/post/scheduling/email3.png" /></td>
+</tr></table>
+It worked! Unfortunately, one of my classes filled up in an earlier time ticket that morning, so it was only able to register me for 13 hours instead of the 17 I wanted. Overall, though, I&rsquo;m very happy with how this turned out, and with the overall ease of setup. Many thanks to Jacky for all his hard work in writing the script. Going forward, I&rsquo;ve already made some changes in <a href="https://github.com/philip-iv/Drexel-Auto-Scheduler">my own fork of the project</a>, and I hope to have an auto-waitlist feature to have ready for registration next fall.</p>
+
+        </div>
+
+    </article>
+
+    <nav>
+    <ul class="pager">
+        
+
+        
+    </ul>
+</nav>
+
+    
+<section id="comments">
+    <div id="disqus_thread">
+        <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'philipiv';
+    var disqus_identifier = 'http:\/\/philipiv.me\/post\/scheduling\/';
+    var disqus_title = 'Automating my Drexel Registration';
+    var disqus_url = 'http:\/\/philipiv.me\/post\/scheduling\/';
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    </div>
+</section>
+
+
+
+</div>
+<footer class="site-footer">
+    <div class="container">
+        <p class="powered-by">
+
+            &copy; 2016 Philip Stephenson &middot; 
+
+            Powered by the <a href="https://github.com/gcushen/hugo-academic" target="_blank">Academic theme</a> for <a href="http://gohugo.io" target="_blank">Hugo</a>.
+
+            <span class="pull-right"><a href="#" id="back_to_top"><span class="button_icon"><i class="fa fa-chevron-up fa-2x" aria-hidden="true"></i></span></a></span>
+
+        </p>
+    </div>
+</footer>
+
+        <script src="//cdnjs.cloudflare.com/ajax/libs/gsap/1.18.4/TweenMax.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/gsap/latest/plugins/ScrollToPlugin.min.js"></script>
+        <script src="http://philipiv.mejs/jquery-1.12.3.min.js"></script>
+        <script src="http://philipiv.mejs/bootstrap.min.js"></script>
+        <script src="http://philipiv.mejs/hugo-academic.js"></script>
+        
+
+        
+        <script>
+            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+            })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+            ga('create', 'UA-81676033-1', 'auto');
+            ga('send', 'pageview');
+
+             
+            var links = document.querySelectorAll('a');
+            Array.prototype.map.call(links, function(item) {
+                if (item.host != document.location.host) {
+                    item.addEventListener('click', function() {
+                        var action = item.getAttribute('data-action') || 'follow';
+                        ga('send', 'event', 'outbound', action, item.href);
+                    });
+                }
+            });
+        </script>
+        
+
+        
+        <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script>
+
+        
+        
+
+    </body>
+</html>
+

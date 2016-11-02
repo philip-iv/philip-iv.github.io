@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Projects on Philip Stephenson</title>
+    <link>http://philipiv.me/project/</link>
+    <description>Recent content in Projects on Philip Stephenson</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2016 Philip Stephenson</copyright>
+    <lastBuildDate>Sat, 23 Jul 2016 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://philipiv.me/project/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>ProjectKorra</title>
+      <link>http://philipiv.me/project/ProjectKorra/</link>
+      <pubDate>Sat, 23 Jul 2016 00:00:00 +0000</pubDate>
+      
+      <guid>http://philipiv.me/project/ProjectKorra/</guid>
+      <description>
+
+&lt;h3 id=&#34;about-the-project&#34;&gt;About the project&lt;/h3&gt;
+
+&lt;p&gt;ProjectKorra is an ongoing collaborative project to recreate elements from the popular TV shows The Last Airbender and Legend of Korra as a family of server plugins for the popular computer videogame Minecraft.&lt;/p&gt;
+
+&lt;h3 id=&#34;my-contributions&#34;&gt;My contributions&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Collaborated with rotating international team of developers to keep timely release schedule&lt;/li&gt;
+
+&lt;li&gt;Maintained and improved large Java codebase to better follow OOP concepts&lt;/li&gt;
+
+&lt;li&gt;Assisted junior developers via code review and programming exercises to increase their knowledge&lt;/li&gt;
+
+&lt;li&gt;Shared and managed code via github using an agile development model&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

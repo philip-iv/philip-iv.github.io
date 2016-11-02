@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on Philip Stephenson</title>
+    <link>http://philipiv.me/post/</link>
+    <description>Recent content in Posts on Philip Stephenson</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2016 Philip Stephenson</copyright>
+    <lastBuildDate>Mon, 31 Oct 2016 23:42:58 -0400</lastBuildDate>
+    <atom:link href="http://philipiv.me/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Automating my Drexel Registration</title>
+      <link>http://philipiv.me/post/scheduling/</link>
+      <pubDate>Mon, 31 Oct 2016 23:42:58 -0400</pubDate>
+      
+      <guid>http://philipiv.me/post/scheduling/</guid>
+      <description>
+
+&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+
+&lt;p&gt;To register for my classes for the upcoming winter quarter, I would need to get up before 7:30 in the morning to log in to DrexelOne, the school&amp;rsquo;s web portal, and add all my CRNs. I wasn&amp;rsquo;t the only one with this time ticket, either, which means I&amp;rsquo;d have to be fast, or else someone else could potentially take the last slot in a class I wanted to take. Fortunately, I&amp;rsquo;m not the only one with this problem: a fellow Drexel student by the name of &lt;a href=&#34;https://github.com/jackyliang&#34;&gt;Jacky Liang&lt;/a&gt; posted his &lt;a href=&#34;https://github.com/jackyliang/Drexel-Shaft-Protection&#34;&gt;python-based auto-scheduler&lt;/a&gt; to the Drexel subreddit.&lt;/p&gt;
+
+&lt;h2 id=&#34;setting-it-up&#34;&gt;Setting It Up&lt;/h2&gt;
+
+&lt;p&gt;The way the program works, you supply a .json file with your login info and a list of CRNs, it creates a browser, logs it in to DrexelOne, navigates to the add/drop classes page, and attempts to add all of your CRNs. It does this all as soon as you run the program, meaning that to use this to register for my classes, I&amp;rsquo;d still have to wake up at 7:30 and get on my computer, which is exactly what I&amp;rsquo;m hoping to avoid.&lt;/p&gt;
+
+&lt;p&gt;All that can be fixed, however, with a small server courtesy of AWS free tier and a few Linux utilities.&lt;/p&gt;
+
+&lt;p&gt;The first step was to launch a new AWS instance - I just used the free tier Ubuntu server. You can only have one of these without paying, so I just deleted the old one I&amp;rsquo;d been using as a gaming server for my friends and I. The provisioning was nothing complicated - just a normal t2.micro instance with SSH traffic allowed so I could connect and set up everything I needed.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://philipiv.me/img/post/scheduling/aws.png&#34;/&gt;&lt;/p&gt;
+
+&lt;p&gt;The next step was to get the project running. Downloading it was accomplished by a simple &lt;code&gt;git clone&lt;/code&gt;, but the project was built on python 2.7, while Ubuntu only has a repository for python 3. In order to get the python version I needed, I used a useful ppa humorously called &lt;a href=&#34;https://launchpad.net/~fkrull/+archive/ubuntu/deadsnakes&#34;&gt;deadsnakes&lt;/a&gt;, which contains every python release from 2.3.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sudo add-apt-repository ppa:fkrull/deadsnakes
+sudo apt-get update
+sudo apt-get install python2.7
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then, mechanize and lxml, two python libraries the project depended on, had to be installed, which in turn requires pip, a python library manager.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sudo apt-get install python-pip
+pip install mechanize
+pip install lxml
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now all my dependencies were taken care off, and I could actually test the program, at least some. I put my info and CRNs in to the JSON file, and ran the script, and got the following error output:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Reading info.json
+(OK)
+Logging in for: pbs44
+(OK)
+ERROR: It seems like it is not your registration time yet. If it is, then try again in a few seconds.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Which is about what I expected, since Sunday night when I was setting this up was decidedly before my registration time. Ultimately, I was just going to hope the good reviews I&amp;rsquo;d seen left for it were true and it would work for me when the time came.&lt;/p&gt;
+
+&lt;h2 id=&#34;automating&#34;&gt;Automating&lt;/h2&gt;
+
+&lt;p&gt;The most important part of the plan, of course, was to have this script run for me early the next morning, so I wouldn&amp;rsquo;t have to get up and do it myself. The key utility for this part was the built in utility &lt;code&gt;at&lt;/code&gt;, which allows for delayed command execution, similar to a once-off &lt;code&gt;cron&lt;/code&gt; job. &lt;code&gt;at&lt;/code&gt; is a very simple utility, which takes input and executes them as commands in a shell - the bourne shell by default.&lt;/p&gt;
+
+&lt;p&gt;I created a simple two-line script to use,&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;cd ~/Drexel-Shaft-Protection
+python2.7 add.py
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;and saved it in my home directory as &lt;code&gt;addClasses&lt;/code&gt;. I ran a quick test, just to make sure the script worked &lt;code&gt;at now -m -f addClasses&lt;/code&gt; (the &lt;code&gt;-m&lt;/code&gt; flag specifies to send mail with output on completion, and &lt;code&gt;-f&lt;/code&gt; takes commands from file instead of standard input), and got an email with the same error output from earlier, which meant my script worked! Then, I just had to set up another queued job for the morning (times in GMT, the server default):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;at 11:29 -m -f addClasses
+at 11:30 -m -f addClasses
+at 11:31 -m -f addClasses
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I used more than one scheduled job in case of potential time disparities or server problems on Drexel&amp;rsquo;s job, though in the end my 7:30 job did it perfectly. At this point, I&amp;rsquo;d achieved what I wanted, but I wasn&amp;rsquo;t fully confident in whether the script or my automation would work, so I wanted to set up a way to make sure the script had executed as planned. I could&amp;rsquo;ve just SSH&amp;rsquo;d into my server to check, but that seemed inelegant. Instead, I decided to forward the mail from &lt;code&gt;at&lt;/code&gt; to my gmail.&lt;/p&gt;
+
+&lt;h2 id=&#34;email&#34;&gt;Email&lt;/h2&gt;
+
+&lt;p&gt;Having installed the default mail package to be able to check my mail from testing, I already had a running postfix service, the default Ubuntu mail client. Fortunately, postfix is set up to make this process quite simple. Since it respects the aliases file, all I had to do was &lt;code&gt;vim /etc/aliases&lt;/code&gt;, and add the alias &lt;code&gt;ubuntu: philipstephenson4@gmail.com&lt;/code&gt;. I ran &lt;code&gt;newaliases&lt;/code&gt; to make sure postfix picked up on the new alias, then restarted the service. I sent a quick test mail to myself, and checked my gmail:
+&lt;img src=&#34;http://philipiv.me/img/post/scheduling/email1.png&#34; style=&#34;height:350px;&#34;/&gt;
+Success! This meant the emails &lt;code&gt;at&lt;/code&gt; would send when it completed its jobs should be sent to my gmail as well.&lt;/p&gt;
+
+&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
+
+&lt;p&gt;I set an alarm for 7:30, so I could make sure my classes were scheduled and do it myself if not. I checked my email when I got up, and had 3 emails waiting in my inbox.
+&lt;table&gt;&lt;tr&gt;
+&lt;td &gt;&lt;img src=&#34;http://philipiv.me/img/post/scheduling/email2.png&#34; /&gt;&lt;/td&gt;
+&lt;td&gt;&lt;img src=&#34;http://philipiv.me/img/post/scheduling/email3.png&#34; /&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+It worked! Unfortunately, one of my classes filled up in an earlier time ticket that morning, so it was only able to register me for 13 hours instead of the 17 I wanted. Overall, though, I&amp;rsquo;m very happy with how this turned out, and with the overall ease of setup. Many thanks to Jacky for all his hard work in writing the script. Going forward, I&amp;rsquo;ve already made some changes in &lt;a href=&#34;https://github.com/philip-iv/Drexel-Auto-Scheduler&#34;&gt;my own fork of the project&lt;/a&gt;, and I hope to have an auto-waitlist feature to have ready for registration next fall.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
